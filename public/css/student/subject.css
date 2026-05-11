@@ -1,0 +1,97 @@
+.student-subject-container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+.student-subject-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.student-subject-header h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 2.3vw, 2.6rem);
+    color: #0f172a;
+}
+
+.student-subject-intro {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+}
+
+.student-subject-card {
+    background: #ffffff;
+    border-radius: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    padding: 24px;
+}
+
+.student-subject-table-wrap {
+    overflow-x: auto;
+}
+
+.student-subject-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+}
+
+.student-subject-table thead th {
+    text-align: left;
+    padding: 16px 18px;
+    color: #0f172a;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+    background: #f8fafc;
+    font-weight: 700;
+}
+
+.student-subject-table tbody td {
+    padding: 16px 18px;
+    color: #334155;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.student-subject-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.student-subject-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.student-subject-table tbody td:first-child {
+    font-weight: 600;
+}
+
+.student-subject-table tbody td:last-child {
+    color: #475569;
+}
+
+@media screen and (max-width: 768px) {
+    .student-subject-card {
+        padding: 20px;
+    }
+
+    .student-subject-table thead th,
+    .student-subject-table tbody td {
+        padding: 14px 12px;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .student-subject-table {
+        min-width: 100%;
+    }
+
+    .student-subject-table thead th,
+    .student-subject-table tbody td {
+        padding: 12px 10px;
+    }
+}

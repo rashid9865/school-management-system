@@ -1,0 +1,27 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+}
+li {
+    list-style: none;
+}
+ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-size: 1.5rem;
+}
+.sidebar a:hover {
+    background-color: darkgray;
+}
+h2 {
+    color: white;
+    justify-content: center;
+    text-align: center;
+}

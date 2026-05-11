@@ -1,0 +1,36 @@
+.timetable-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.timetable-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.timetable-table th,
+.timetable-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.timetable-table th {
+    background-color: #007bff;
+    color: white;
+}
+
+.timetable-table tr:hover {
+    background-color: #f8f9fa;
+}
