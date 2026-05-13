@@ -18,34 +18,34 @@
 }
 
 .sections-create-container {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
     min-height: 100vh;
-    padding: 2rem 0;
+    padding: 2.5rem 0;
 }
 
 .professional-create-card {
-    background: var(--card-bg);
+    background: white;
     border: none;
-    border-radius: 16px;
-    box-shadow: var(--shadow-medium);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    max-width: 780px;
     margin: 0 auto;
+    max-width: 800px;
 }
 
 .professional-create-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-heavy);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
 .create-card-header {
-    background: var(--header-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 65%, #5a4d8f 100%);
     color: white;
     border: none;
-    padding: 2rem;
+    padding: 3rem 2.5rem;
     position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .create-card-header::before {
@@ -54,18 +54,18 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
+    height: 4px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
 }
 
 .create-card-header h1 {
     position: relative;
     z-index: 1;
     margin: 0;
-    font-weight: 700;
-    font-size: 1.75rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
 }
 
 .create-form-section {
@@ -136,7 +136,7 @@
 }
 
 .btn-cancel-professional {
-    background: var(--btn-secondary);
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
     border: none;
     border-radius: 12px;
     padding: 1rem 2rem;
@@ -145,7 +145,7 @@
     font-size: 1.05rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(168, 237, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(168, 237, 234, 0.3);
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -179,7 +179,20 @@
     font-style: italic;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
+    .sections-create-container {
+        padding: 1rem 0;
+    }
+
+    .create-card-header {
+        padding: 2rem 1.5rem;
+    }
+
+    .create-card-header h1 {
+        font-size: 1.5rem;
+    }
+
     .create-form-section {
         padding: 2rem 1.5rem;
     }
@@ -195,22 +208,39 @@
         justify-content: center;
     }
 }
+
+/* Loading Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.professional-create-card {
+    animation: fadeInUp 0.6s ease-out;
+}
 </style>
 @endsection
 
 @section('content')
 <div class="sections-create-container">
-    <div class="professional-create-card">
-        <div class="create-card-header">
-            <h1><i class="fas fa-layer-group me-2"></i>Create Section</h1>
-        </div>
+    <div class="container-fluid">
+        <div class="professional-create-card">
+            <div class="create-card-header">
+                <h1><i class="fas fa-layer-group me-3"></i>Create Section</h1>
+            </div>
         <div class="create-form-section">
             <form action="{{ route('sections.store') }}" method="POST" id="sectionForm">
                 @csrf
 
                 <div class="form-group-professional">
                     <label for="grade_id" class="form-label-professional">
-                        Grade <span class="required-indicator">*</span>
+                        <i class="fas fa-graduation-cap me-2"></i>Grade <span class="required-indicator">*</span>
                     </label>
                     <select
                         id="grade_id"
@@ -226,7 +256,7 @@
                         @endforeach
                     </select>
                     <div class="form-help-text">
-                        Choose the grade for this section.
+                        <i class="fas fa-info-circle me-1"></i>Choose the grade for this section.
                     </div>
                     @error('grade_id')
                         <div class="text-danger mt-2">
@@ -237,7 +267,7 @@
 
                 <div class="form-group-professional">
                     <label for="name" class="form-label-professional">
-                        Section Name <span class="required-indicator">*</span>
+                        <i class="fas fa-layer-group me-2"></i>Section Name <span class="required-indicator">*</span>
                     </label>
                     <input
                         type="text"
@@ -250,7 +280,7 @@
                         value="{{ old('name') }}"
                     >
                     <div class="form-help-text">
-                        Enter a clear and descriptive name for the section.
+                        <i class="fas fa-info-circle me-1"></i>Enter a clear and descriptive name for the section.
                     </div>
                     @error('name')
                         <div class="text-danger mt-2">

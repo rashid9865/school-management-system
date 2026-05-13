@@ -723,9 +723,9 @@ body {
         $.ajax({
             url: `/subjects/${subjectId}/edit`,
             type: 'GET',
-            // headers: {
-            //     'X-CSRF-TOKEN': token
-            // },
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
             success: function(response) {
                 $('#name').prop('disabled', false).val(response.name);
             },

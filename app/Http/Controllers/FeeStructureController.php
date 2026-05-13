@@ -25,8 +25,8 @@ class FeeStructureController extends Controller
     public function index()
     {
         $feeStructures = $this->feesRepository->getAll();
-        $grades = $this->gradeRepository->all();
-        $sections = $this->sectionRepository->all();
+        $grades = $this->gradeRepository->getAll();
+        $sections = $this->sectionRepository->getAll();
 
         return view('users.admin.fee_structures.index', compact('feeStructures', 'grades', 'sections'));
     }
