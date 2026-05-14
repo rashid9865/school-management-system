@@ -290,11 +290,18 @@
                     <h1><i class="fas fa-graduation-cap me-3"></i>All Grades</h1>
                     <p>Grade list with optional description for every entry.</p>
                 </div>
+            
                 <a href="{{ route('grades.create') }}" class="btn-new-grade">
                     <i class="fas fa-plus"></i>
                     Create Grade
                 </a>
             </div>
+            <div class="success-message" style="padding: 1rem 2.5rem;">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
             <div class="card-body-professional">
                 @if($grades->count())
                     <div class="table-responsive">
@@ -323,9 +330,13 @@
                                                 <a href="{{ route('grades.edit', $grade->id) }}" class="btn btn-warning btn-sm">
                                                     <i class="fas fa-edit"></i>Edit
                                                 </a>
-                                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $grade->id }}" data-type="grade">
-                                                    <i class="fas fa-trash"></i>Delete
-                                                </button>
+                                                <form action="{{ route('grades.destroy', $grade->id) }}" method="POST" style="display:inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" ">
+                                                        <i class="fas fa-trash-alt"></i>Delete
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

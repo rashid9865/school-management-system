@@ -289,6 +289,105 @@ body {
     flex-wrap: wrap;
 }
 
+.toggle-status-btn {
+    border-radius: 999px;
+    padding: 0.85rem 1.3rem;
+    min-width: 130px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 0.82rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    border: none;
+    color: #ffffff;
+}
+
+.toggle-status-btn:hover {
+    transform: translateY(-1px);
+}
+
+.toggle-status-btn:disabled {
+    opacity: 0.72;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.toggle-status-btn.status-active {
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+}
+
+.toggle-status-btn.status-inactive {
+    background: linear-gradient(135deg, #64748b 0%, #334155 100%);
+}
+
+.toggle-status-btn .status-icon {
+    font-size: 1rem;
+}
+
+.toast-notification {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 2200;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-width: 280px;
+    max-width: 360px;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    box-shadow: 0 25px 50px rgba(15, 23, 42, 0.18);
+    color: #ffffff;
+    opacity: 0;
+    transform: translateY(-12px);
+    animation: toastIn 0.32s forwards;
+}
+
+.toast-notification.success {
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+}
+
+.toast-notification.error {
+    background: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+}
+
+.toast-notification i {
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+.toast-notification strong {
+    display: block;
+    font-size: 0.96rem;
+}
+
+.toast-notification p {
+    margin: 0.15rem 0 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0.95;
+}
+
+@keyframes toastIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes toastOut {
+    to {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+}
+
 .btn-edit {
     background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     color: white;
@@ -625,8 +724,8 @@ body {
                                         <td><span style="background: linear-gradient(135deg, rgba(79, 172, 254, 0.12) 0%, rgba(0, 242, 254, 0.08) 100%); color: #1e40af; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; border-left: 3px solid #4facfe;">{{ $subject->created_at->format('M d, Y') }}</span></td>
                                         <td>
                                            
-                                                <button type ="button"   class="toggle-status-btn action-btn" data-id="{{ $subject->id }}"
-        data-status="{{ $subject->status }}">{{ $subject->status ? 'Active' : 'Inactive' }}</button>
+                                            <button type="button" class="toggle-status-btn action-btn status-{{ $subject->status ? 'active' : 'inactive' }}" data-id="{{ $subject->id }}"
+        data-status="{{ $subject->status }}"><i class="fas status-icon {{ $subject->status ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i><span>{{ $subject->status ? 'Active' : 'Inactive' }}</span></button>
                                          
         
                                         </td>
@@ -774,10 +873,39 @@ body {
     $(function () {    
         console.log('Subjects AJAX script loaded');
         console.log('jQuery version:', typeof $ === 'function' ? $.fn.jquery : 'jQuery not loaded');
+        function showToast(type, message) {
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            const toast = $(
+                `<div class="toast-notification ${type}">
+                    <i class="fas ${icon}"></i>
+                    <div>
+                        <strong>${type === 'success' ? 'Success' : 'Error'}</strong>
+                        <p>${message}</p>
+                    </div>
+                </div>`
+            );
+
+            $('body').append(toast);
+            setTimeout(() => {
+                toast.css('animation', 'toastOut 0.25s forwards');
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
+        }
+
         $(document).on('click', '.toggle-status-btn', function () {
-            let button = $(this);
-            let id = button.data('id');
-            let status = button.data('status');
+            const button = $(this);
+            const id = button.data('id');
+            const status = Number(button.data('status'));
+
+            if (!id) {
+                showToast('error', 'Unable to toggle subject status.');
+                return;
+            }
+
+            button.prop('disabled', true);
+            const icon = button.find('.status-icon');
+            icon.removeClass('fa-toggle-on fa-toggle-off').addClass('fa-spinner fa-spin');
+
             $.ajax({
                 url: "{{ route('subject.toggle') }}",
                 type: 'POST',
@@ -787,19 +915,23 @@ body {
                     status: status
                 },
                 success: function (response) {
-                    if (response.status == 1) {
-                        button.text('Active');
-                        button.data('status', 1);
-                    } else {
-                        button.text('Inactive');
-                        button.data('status', 0);
-                    }
+                    const isActive = Number(response.status) === 1;
+                    button.data('status', isActive ? 1 : 0);
+                    button.toggleClass('status-active status-inactive', false);
+                    button.addClass(isActive ? 'status-active' : 'status-inactive');
+                    button.find('span').text(isActive ? 'Active' : 'Inactive');
+                    icon.removeClass('fa-spinner fa-spin').addClass(isActive ? 'fa-toggle-on' : 'fa-toggle-off');
+                    showToast('success', `Subject is now ${isActive ? 'Active' : 'Inactive'}.`);
                 },
                 error: function (xhr, status, error) {
-                    console.log("AJAX ERROR STATUS:", status);
-                    console.log("HTTP STATUS CODE:", xhr.status);
-                    console.log("RESPONSE TEXT:", xhr.responseText);
-                    alert("Error Code: " + xhr.status);
+                    console.error("AJAX ERROR STATUS:", status);
+                    console.error("HTTP STATUS CODE:", xhr.status);
+                    console.error("RESPONSE TEXT:", xhr.responseText);
+                    icon.removeClass('fa-spinner fa-spin').addClass(status === 0 ? 'fa-toggle-off' : 'fa-toggle-on');
+                    showToast('error', 'Unable to update subject status.');
+                },
+                complete: function () {
+                    button.prop('disabled', false);
                 }
             });
         });

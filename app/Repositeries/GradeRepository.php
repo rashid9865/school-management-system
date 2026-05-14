@@ -37,6 +37,7 @@ class GradeRepository implements CommonInterface
         if ($grade) {
             $grade->delete();
         }
+        return true;
     }
 
     public function findById($id)

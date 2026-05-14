@@ -225,7 +225,7 @@ Route::delete('/admin/timetables/{id}', [TimeTableController::class, 'destroy'])
 // ============================================
 // FEE MANAGEMENT ROUTES
 // ============================================
-Route::prefix('fee')->name('fee.')->group(function () {
+Route::prefix('fee')->name('fee.')->middleware('auth')->group(function () {
     Route::get('/fee-structures', [FeeStructureController::class, 'index'])->name('fee-structures.index');
     Route::post('/fee-structures', [FeeStructureController::class, 'store'])->name('fee-structures.store');
     Route::get('/collect', [FeeStructureController::class, 'collectFee'])->name('collect');
@@ -236,7 +236,7 @@ Route::prefix('fee')->name('fee.')->group(function () {
 // ============================================
 // REPORT ROUTES
 // ============================================
-Route::prefix('reports')->name('reports.')->group(function () {
+Route::prefix('reports')->name('reports.')->middleware('auth')->group(function () {
     Route::get('/students', [ReportController::class, 'studentReports'])->name('students');
     Route::get('/attendance', [ReportController::class, 'attendanceReports'])->name('attendance');
     Route::get('/fees', [ReportController::class, 'feeReports'])->name('fees');

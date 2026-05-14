@@ -53,7 +53,11 @@ class GradeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $grade = $this->gradeRepository->findById($id);
+        if (!$grade) {
+            return redirect()->route('grades.index')->with('error', 'Grade not found!');
+        }
+        return view('grades.grade',compact('grade'));
     }
 
     /**
@@ -61,7 +65,11 @@ class GradeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+       $grade = $this->gradeRepository->findById($id);
+        if (!$grade) {
+            return redirect()->route('grades.index')->with('error', 'Grade not found!');
+        }
+       return view('grades.edit', compact('grade'));
     }
 
     /**
@@ -69,7 +77,18 @@ class GradeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $updated = $this->gradeRepository->update($id, $request->only(['name', 'description']));
+
+        if (!$updated) {
+            return redirect()->route('grades.index')->with('error', 'Grade not found or update failed!');
+        }
+
+        return redirect()->route('grades.index')->with('success', 'Grade updated successfully!');
     }
 
     /**
@@ -77,7 +96,8 @@ class GradeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->gradeRepository->delete($id);
+        return redirect()->route('grades.index')->with('success', 'Grade deleted successfully!');
     }
 
     public function assignStudent()

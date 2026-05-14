@@ -530,8 +530,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="stat-icon">
                         <i class="fas fa-book"></i>
                     </div>
-                    <h2>12</h2>
-                    <p>Active Subjects</p>
+                    <h2>{{ $subjects->count() }}</h2>
+                    <p> Total Subjects</p>
                 </div>
 
                 <div class="stat-card">
