@@ -69,6 +69,11 @@ Teacher Registration
                                placeholder="Enter full name"
                                value="{{ old('name') }}"
                                required>
+                    @error('name')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     {{-- Email --}}
@@ -81,6 +86,11 @@ Teacher Registration
                                placeholder="you@example.com"
                                value="{{ old('email') }}"
                                required>
+                    @error('email')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     {{-- Password --}}
@@ -100,6 +110,11 @@ Teacher Registration
                                     onclick="togglePassword('password')">
                                 Show
                             </button>
+    @error('password')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
 
                         </div>
                     </div>
@@ -123,6 +138,11 @@ Teacher Registration
                                     onclick="togglePassword('password-confirmation')">
                                 Show
                             </button>
+    @error('password_confirmation')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
 
                         </div>
                     </div>
@@ -136,6 +156,11 @@ Teacher Registration
                                name="qualification"
                                placeholder="Enter qualification"
                                value="{{ old('qualification') }}">
+                    @error('qualification')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     {{-- Phone --}}
@@ -147,6 +172,11 @@ Teacher Registration
                                name="phone"
                                placeholder="Enter phone number"
                                value="{{ old('phone') }}">
+                    @error('phone')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     {{-- Hire Date --}}
@@ -157,6 +187,11 @@ Teacher Registration
                                id="date"
                                name="hire_date"
                                value="{{ old('hire_date') }}">
+                    @error('hire_date')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     {{-- Image --}}
@@ -167,7 +202,55 @@ Teacher Registration
                                id="image"
                                name="image"
                                accept="image/*">
+                    @error('image')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
+                    {{-- Address --}}
+                    <div class="form-group">
+                        <label for="address">Address</label>
+
+                        <input type="text"
+                               id="address"
+                               name="address"
+                               placeholder="Enter address"
+                               value="{{ old('address') }}">
+                    @error('address')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <div class="form-group">
+                        <label for="birth_date">Birth Date</label>
+
+                        <input type="date"
+                               id="birth_date"
+                               name="birth_date"
+                               value="{{ old('birth_date') }}">
+                    @error('birth_date')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <div class="form-group">
+                        <label for="gender">
+                        </label>
+                        <select id="gender"
+                                class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>  
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    @error('gender')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
 
                 </div>
 

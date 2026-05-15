@@ -32,14 +32,36 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'father_name' =>  'required',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'password' => 'required|string|confirmed',
+            'father_name' =>  'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'age' => 'required|integer',
+            'age' => 'required|integer|min:1|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3000',
             'address' => 'required',
             'roll_no' => 'required|unique:students,roll_no',
-        ]);
+        ],
+        [
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a string.',
+            'password.required' => 'The password field is required.',
+
+            'father_name.required' => 'The father name field is required.',
+            'email.required' => 'The email field is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'email.unique' => 'The email has already been taken.',
+            'age.required' => 'The age field is required.',
+            'age.integer' => 'The age must be an integer.',
+            'age.min' => 'The age must be at least 5.',
+            'age.max' => 'The age may not be greater than 35.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+            'image.max' => 'The image may not be greater than 3000 kilobytes.',
+            'address.required' => 'The address field is required.',
+            'roll_no.required' => 'The roll number field is required.',
+            'roll_no.unique' => 'The roll number has already been taken.',
+         ]
+        );
         if($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('student_images', 'public');
             $request->merge(['image' => $imagePath]);
@@ -251,15 +273,41 @@ class StudentController extends Controller
     public function update(Request $request, $id){
 
          $request->validate([
-            'name' => 'required',
-            'father_name' =>  'required',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'father_name' =>  'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|email',
-            'age' => 'required|integer',
+            'age' => 'required|integer|min:1|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3000',
             'address' => 'required',
-            'roll_no' => 'required',
-        ]);
-       $this->studentService->updateStudent($id, $request->only(['name', 'email','father_name', 'age', 'address', 'roll_no']), $request->file('image'));
+            'roll_no' => 'required|integer|unique:students,roll_no,' . $id,
+        ],
+        [
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a string.',
+            'name.max' => 'The name may not be greater than 255 characters.',
+            'father_name.required' => 'The father name field is required.',
+            'father_name.string' => 'The father name must be a string.',
+            'father_name.max' => 'The father name may not be greater than 255 characters.',
+            'email.required' => 'The email field is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'age.required' => 'The age field is required.',
+            'age.integer' => 'The age must be an integer.',
+            'age.min' => 'The age must be at least 5.',
+            'age.max' => 'The age may not be greater than 35.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+            'image.max' => 'The image may not be greater than 3000 kilobytes.',
+            'address.required' => 'The address field is required.',
+            'roll_no.required' => 'The roll number field is required.',
+            'roll_no.integer' => 'The roll number must be an integer.',
+            'roll_no.unique' => 'The roll number has already been taken by another student.',
+        ]
+        );
+        if($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('student_images', 'public');
+            $request->merge(['image' => $imagePath]);
+        }
+       $this->studentRepository->update($id, $request->only(['name', 'email','father_name', 'age','image', 'address', 'roll_no']));
 
         return redirect()->route('admin.dashboard')->with('success', 'Student updated successfully.');
     }
@@ -286,8 +334,8 @@ class StudentController extends Controller
         }
     }
 
-     public function layout()
-     {
+    public function layout()
+    {
         return view('users.student.layout');
-     }
+    }
 }

@@ -35,7 +35,7 @@ class StudentRepositry implements CommonInterface
     // Show a specific student
     public function show($id)
     {
-        $student = Student::with('user')->findOrFail($id);
+        $student = Student::findOrFail($id);
         return $student;
     }
     // Update a student
@@ -43,24 +43,15 @@ class StudentRepositry implements CommonInterface
     public function update($id, array $studentDetails)
     {
         $student = Student::findOrFail($id);
-        $userData = [];
-        if (isset($studentDetails['name']) || isset($studentDetails['email']) || isset($studentDetails['image'])) {
-            $userData = array_filter($studentDetails, function ($key) {
-                return in_array($key, ['name', 'email', 'image']);
-            }, ARRAY_FILTER_USE_KEY);
-        }
-
-        $studentData = array_filter($studentDetails, function ($key) {
-            return in_array($key, ['father_name', 'address', 'age', 'roll_no', 'grade_id', 'section_id']);
-        }, ARRAY_FILTER_USE_KEY);
-
-        if (!empty($studentData)) {
-            $student->update($studentData);
-        }
-
-        if (!empty($userData) && $student->user) {
-            $student->user->update($userData);
-        }
+        $student->update([
+            'name' => $studentDetails['name'],
+            'email' => $studentDetails['email'],
+            'father_name' => $studentDetails['father_name'],
+            'age' => $studentDetails['age'],
+            'address' => $studentDetails['address'],
+            'roll_no' => $studentDetails['roll_no'],
+            'image' => $studentDetails['image'] ?? $student->image,
+        ]);
 
         return true;
     }

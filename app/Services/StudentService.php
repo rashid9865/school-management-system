@@ -28,8 +28,8 @@ class StudentService
    {   
     $student = $this->studentRepository->findById($id);
     if($image){
-    if ($student->user->image) {
-    $imagePath = public_path('storage/' . $student->user->image);
+    if ($student->image) {
+    $imagePath = public_path('storage/' . $student->image);
     if (file_exists($imagePath)) {
         unlink($imagePath);
     }

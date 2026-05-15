@@ -77,6 +77,11 @@ Student Registration
                                placeholder="Enter full name"
                                value="{{ old('name') }}"
                                required>
+                    @error('name')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
                     </div>
 
                     {{-- Email --}}
@@ -89,6 +94,11 @@ Student Registration
                                placeholder="you@example.com"
                                value="{{ old('email') }}"
                                required>
+                               @error('email')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
                     </div>
 
                     {{-- Password --}}
@@ -108,7 +118,11 @@ Student Registration
                                     onclick="togglePassword('password')">
                                 Show
                             </button>
-
+ @error('password')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
                         </div>
                     </div>
 
@@ -146,6 +160,11 @@ Student Registration
                                name="father_name"
                                placeholder="Enter father or guardian name"
                                value="{{ old('father_name') }}">
+                               @error('father_name')
+                               <div class="text-danger">
+                                   {{ $message }}
+                                   </div>
+                               @enderror
                     </div>
 
                     {{-- Age --}}
@@ -157,6 +176,11 @@ Student Registration
                                name="age"
                                placeholder="Enter age"
                                value="{{ old('age') }}">
+                                 @error('age')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
                     </div>
 
                     {{-- Roll Number --}}
@@ -168,6 +192,12 @@ Student Registration
                                name="roll_no"
                                placeholder="Enter roll number"
                                value="{{ old('roll_no') }}">
+                                 @error('roll_no')
+    <div class="text-danger">
+        {{ $message }}
+        </div>
+@enderror
+
                     </div>
 
                     {{-- Address --}}
@@ -179,6 +209,11 @@ Student Registration
                                name="address"
                                placeholder="Enter address"
                                value="{{ old('address') }}">
+                                    @error('address')
+    <div class="text-danger">
+        {{ $message }}
+        </div>
+@enderror
                     </div>
 
                     {{-- Profile Image --}}
@@ -189,6 +224,11 @@ Student Registration
                                id="image"
                                name="image"
                                accept="image/*">
+                               @error('image')
+    <div class="text-danger">
+        {{ $message }}
+    </div>
+@enderror
                     </div>
 
                 </div>

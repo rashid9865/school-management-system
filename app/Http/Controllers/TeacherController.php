@@ -73,10 +73,10 @@ class TeacherController extends Controller
     {
        
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed',
-            'phone' => 'required',
+            'phone' => 'required|numeric',
             'qualification' => 'required',
             'hire_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3000',
@@ -84,7 +84,22 @@ class TeacherController extends Controller
             'birth_date' => 'nullable|date',
             'address' => 'nullable|string',
             'status' => 'nullable|string',
-        ]);
+        ],
+        [
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a string.',
+            'name.regex' => 'The name may only contain letters and spaces.',
+            'email.required' => 'The email field is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'email.unique' => 'The email has already been taken.',
+            'password.required' => 'The password field is required.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'phone.required' => 'The phone field is required.',
+            'qualification.required' => 'The qualification field is required.',
+            'hire_date.required' => 'The hire date field is required.',
+            'hire_date.date' => 'The hire date must be a valid date.',
+        ]
+        );
         
         $this->teacherService->registerTeacher(
             $request->only(['name', 'email','phone', 'qualification', 'hire_date', 'password', 'gender', 'birth_date', 'address', 'status']),
@@ -102,7 +117,13 @@ class TeacherController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-        ]);
+        ],
+        [
+            'email.required' => 'The email field is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'password.required' => 'The password field is required.',
+        ]
+        );
 
       if (Auth::guard('teacher')->attempt($credentials)) {
     return redirect()->route('teacher.dashboard')->with('success', 'Logged in successfully!');
@@ -489,7 +510,7 @@ class TeacherController extends Controller
     public function update(Request $request ,$id)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|email',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3000',
             'phone' => 'required',
@@ -498,7 +519,18 @@ class TeacherController extends Controller
             'gender' => 'nullable|string',
             'birth_date' => 'nullable|date',
             'address' => 'nullable|string',
-            'status' => 'required|string'
+        ],
+        
+        [
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a string.',
+            'name.regex' => 'The name may only contain letters and spaces.',
+            'email.required' => 'The email field is required.',
+            'email.email' => 'The email must be a valid email address.',
+            'phone.required' => 'The phone field is required.',
+            'qualification.required' => 'The qualification field is required.',
+            'hire_date.required' => 'The hire date field is required.',
+            'hire_date.date' => 'The hire date must be a valid date.',
         ]);
          $this->teacherRepository->update($id, $request->only(['name', 'email','phone', 'qualification', 'hire_date', 'gender', 'birth_date', 'address', 'status']));
 

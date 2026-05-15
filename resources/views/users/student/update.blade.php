@@ -97,10 +97,20 @@ Update Student
                         <div class="col-md-6 form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $student->name }}" required>
+                        @error('name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="father_name">Father Name</label>
                             <input type="text" class="form-control" id="father_name" name="father_name" value="{{ $student->father_name }}" required>
+                        @error('father_name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                     </div>
 
@@ -108,10 +118,20 @@ Update Student
                         <div class="col-md-6 form-group">
                             <label for="email">Email</label>
                             <input type="email" class="form-control" id="email" name="email" value="{{ $student->email }}" required>
+                        @error('email')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="age">Age</label>
                             <input type="number" class="form-control" id="age" name="age" value="{{ $student->age }}" required>
+                            @error('age')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
 
@@ -119,16 +139,31 @@ Update Student
                         <div class="col-md-6 form-group">
                             <label for="address">Address</label>
                             <input type="text" class="form-control" id="address" name="address" value="{{ $student->address }}" required>
+                            @error('address')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="rollno">Roll No</label>
                             <input type="number" class="form-control" id="rollno" name="roll_no" value="{{ $student->roll_no }}" required>
+                            @error('roll_no')
+                                <div class="text-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="image">Profile Picture</label>
                         <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        @error('image')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save me-2"></i>Save Changes</button>

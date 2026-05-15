@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="card-header-professional">
                 <h1><i class="fas fa-tachometer-alt me-3"></i>Admin Dashboard</h1>
             </div>
-
+            <a href="{{ route('student.allstudents') }}" style="text-decoration: none;">
             <div class="stats-section">
                 <div class="stat-card">
                     <div class="stat-icon">
@@ -517,7 +517,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2>{{ $students->count() }}</h2>
                     <p>Total Students</p>
                 </div>
-
+            </a>
+            <a href="{{ route('teacher.allTeachers') }}" style="text-decoration: none;">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-chalkboard-teacher"></i>
@@ -525,7 +526,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2>{{ $teachers->count() }}</h2>
                     <p>Total Teachers</p>
                 </div>
-
+            </a>
+            <a href="{{ route('subjects.index') }}" style="text-decoration: none;">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-book"></i>
@@ -533,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2>{{ $subjects->count() }}</h2>
                     <p> Total Subjects</p>
                 </div>
-
+            </a>
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-calendar-check"></i>
@@ -541,131 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h2>85%</h2>
                     <p>Attendance Rate</p>
                 </div>
-            </div>
-
-            <div class="dashboard-tabs">
-                <button class="tab-button active" data-tab="students">
-                    <i class="fas fa-user-graduate me-2"></i>Students
-                </button>
-                <button class="tab-button" data-tab="teachers">
-                    <i class="fas fa-chalkboard-teacher me-2"></i>Teachers
-                </button>
-            </div>
-
-            <!-- Students Tab -->
-            <div id="students-tab" class="tab-content active">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="mb-0"><i class="fas fa-users me-2"></i>Student Management</h3>
-                    <a href="{{ route('student.register') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-1"></i>Add Student
-                    </a>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-user me-1"></i>Name</th>
-                                <th><i class="fas fa-envelope me-1"></i>Email</th>
-                                <th><i class="fas fa-user-friends me-1"></i>Father Name</th>
-                                <th><i class="fas fa-map-marker-alt me-1"></i>Address</th>
-                                <th><i class="fas fa-birthday-cake me-1"></i>Age</th>
-                                <th><i class="fas fa-cogs me-1"></i>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if($students->isEmpty())
-                            <tr>
-                                <td colspan="6" class="text-center py-4">
-                                    <i class="fas fa-users fa-2x text-muted mb-2"></i>
-                                    <p class="text-muted">No students found.</p>
-                                </td>
-                            </tr>
-                            @else
-                            @foreach($students as $student)
-                            <tr>
-                                <td>{{ $student->name }}</td>
-                                <td>{{ $student->email }}</td>
-                                <td>{{ $student->father_name ?? 'N/A' }}</td>
-                                <td>{{ $student->address ?? 'N/A' }}</td>
-                                <td>{{ $student->age ?? 'N/A' }}</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="{{ route('student.show', $student->id) }}" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-eye"></i>View
-                                        </a>
-                                        <a href="{{ route('student.edit', $student->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i>Edit
-                                        </a>
-                                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $student->id }}" data-type="student">
-                                            <i class="fas fa-trash"></i>Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Teachers Tab -->
-            <div id="teachers-tab" class="tab-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="mb-0"><i class="fas fa-chalkboard-teacher me-2"></i>Teacher Management</h3>
-                    <a href="{{ route('teacher.register') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-1"></i>Add Teacher
-                    </a>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-user me-1"></i>Name</th>
-                                <th><i class="fas fa-envelope me-1"></i>Email</th>
-                                <th><i class="fas fa-calendar me-1"></i>Hire Date</th>
-                                <th><i class="fas fa-graduation-cap me-1"></i>Qualification</th>
-                                <th><i class="fas fa-phone me-1"></i>Phone</th>
-                                <th><i class="fas fa-cogs me-1"></i>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if($teachers->isEmpty())
-                            <tr>
-                                <td colspan="6" class="text-center py-4">
-                                    <i class="fas fa-chalkboard-teacher fa-2x text-muted mb-2"></i>
-                                    <p class="text-muted">No teachers found.</p>
-                                </td>
-                            </tr>
-                            @else
-                            @foreach($teachers as $teacher)
-                            <tr>
-                                <td>{{ $teacher->name }}</td>
-                                <td>{{ $teacher->email }}</td>
-                                <td>{{ $teacher->hire_date ? \Carbon\Carbon::parse($teacher->hire_date)->format('M d, Y') : 'N/A' }}</td>
-                                <td>{{ $teacher->qualification ?? 'N/A' }}</td>
-                                <td>{{ $teacher->phone ?? 'N/A' }}</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="{{ route('teacher.show', $teacher->id) }}" class="btn btn-primary btn-sm">
-                                            <i class="fas fa-eye"></i>View
-                                        </a>
-                                        <a href="{{ route('teacher.edit', $teacher->id) }}" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i>Edit
-                                        </a>
-                                        <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $teacher->id }}" data-type="teacher">
-                                            <i class="fas fa-trash"></i>Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
+            </div>             
             </div>
         </div>
     </div>

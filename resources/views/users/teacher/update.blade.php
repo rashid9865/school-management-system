@@ -104,10 +104,20 @@ Update Teacher
                         <div class="col-md-6 form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $teacher->name }}" required>
+                        @error('name')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="email">Email</label>
                             <input type="email" class="form-control" id="email" name="email" value="{{ $teacher->email }}" required>
+                        @error('email')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                     </div>
 
@@ -115,10 +125,20 @@ Update Teacher
                         <div class="col-md-6 form-group">
                             <label for="phone">Phone</label>
                             <input type="text" class="form-control" id="phone" name="phone" value="{{ $teacher->phone }}" required>
+                        @error('phone')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="qualification">Qualification</label>
                             <input type="text" class="form-control" id="qualification" name="qualification" value="{{ $teacher->qualification }}" required>
+                        @error('qualification')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                     </div>
 
@@ -126,6 +146,11 @@ Update Teacher
                         <div class="col-md-6 form-group">
                             <label for="hire_date">Hire Date</label>
                             <input type="date" class="form-control" id="hire_date" name="hire_date" value="{{ $teacher->hire_date }}" required>
+                        @error('hire_date')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>  
+                        @enderror
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="gender">Gender</label>
@@ -135,6 +160,11 @@ Update Teacher
                                 <option value="female" {{ $teacher->gender == 'female' ? 'selected' : '' }}>Female</option>
                                 <option value="other" {{ $teacher->gender == 'other' ? 'selected' : '' }}>Other</option>
                             </select>
+                        @error('gender')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
                     </div>
 
@@ -142,24 +172,33 @@ Update Teacher
                         <div class="col-md-6 form-group">
                             <label for="birth_date">Birth Date</label>
                             <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ $teacher->birth_date }}">
+                        @error('birth_date')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         </div>
-                        <div class="col-md-6 form-group">
-                            <label for="status">Status</label>
-                            <select id="status" class="form-select" name="status">
-                                <option value="active" {{ $teacher->status == 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ $teacher->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                            </select>
-                        </div>
+            
                     </div>
 
                     <div class="form-group">
                         <label for="address">Address</label>
                         <textarea id="address" class="form-textarea form-control" name="address">{{ $teacher->address }}</textarea>
+                    @error('address')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="image">Profile Picture</label>
                         <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    @error('image')
+                        <div class="text-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save me-2"></i>Save Changes</button>
