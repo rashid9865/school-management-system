@@ -193,7 +193,7 @@ Update Teacher
 
                     <div class="form-group">
                         <label for="image">Profile Picture</label>
-                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" >
                     @error('image')
                         <div class="text-danger">
                             {{ $message }}

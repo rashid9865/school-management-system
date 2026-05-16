@@ -185,8 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function resetSubject() {
         subject.innerHTML = `<option>Select schedule first</option>`;
-         subject.disabled = true;
-    }
+        subject.disabled = true;
+     }
 
     function resetTime() {
         startTime.innerHTML = `<option>Select subject first</option>`;

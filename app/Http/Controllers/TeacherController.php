@@ -527,12 +527,19 @@ class TeacherController extends Controller
             'name.regex' => 'The name may only contain letters and spaces.',
             'email.required' => 'The email field is required.',
             'email.email' => 'The email must be a valid email address.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+            'image.max' => 'The image may not be greater than 3MB.',
             'phone.required' => 'The phone field is required.',
             'qualification.required' => 'The qualification field is required.',
             'hire_date.required' => 'The hire date field is required.',
             'hire_date.date' => 'The hire date must be a valid date.',
         ]);
-         $this->teacherRepository->update($id, $request->only(['name', 'email','phone', 'qualification', 'hire_date', 'gender', 'birth_date', 'address', 'status']));
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('teachers', 'public');
+            $request->merge(['image' => $imagePath]);
+        }
+         $this->teacherRepository->update($id, $request->only(['name', 'email','image','phone', 'qualification', 'hire_date', 'gender', 'birth_date', 'address', 'status']));
 
         return redirect()->route('admin.dashboard')->with('success', 'Teacher updated successfully.');
     }

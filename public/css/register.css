@@ -20,13 +20,13 @@
     padding: 50px 0 70px;
    
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-height: calc(100vh - 130px);
+   
     background: linear-gradient(180deg, #eaf5ff 0%, #f9fbff 55%, #ffffff 100%);
     color: var(--text);
 }
 .auth-card {
     width: 100%;
-    max-width: 680px;
+    max-width: 1080px;
     background: var(--surface);
     border-radius: 32px;
     overflow: hidden;
@@ -124,7 +124,7 @@
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 15px 18px;
+    padding: 20px 25px;
     border-radius: 18px;
     border: 1px solid var(--border);
     background: #ffffff;

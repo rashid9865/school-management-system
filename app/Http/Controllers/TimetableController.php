@@ -162,6 +162,7 @@ class TimetableController extends Controller
         }
 
         $allSubjects = $grade->subjects;
+        return $allSubjects;
 
         if (!$day) {
             return response()->json($allSubjects->map(function ($subject) {

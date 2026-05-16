@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <th><i class="fas fa-envelope me-1"></i>Email</th>
                             <th><i class="fas fa-user-friends me-1"></i>Father Name</th>
                             <th><i class="fas fa-map-marker-alt me-1"></i>Address</th>
-                            <th><i class="fas fa-birthday-cake me-1"></i>Age</th>
+                            <th><i class="fas fa-birthday-cake me-1"></i>Date of birth</th>
                             <th><i class="fas fa-phone me-1"></i>Phone</th>
                             <th><i class="fas fa-cogs me-1"></i>Actions</th>
                         </tr>
@@ -489,11 +489,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         @else
                         @foreach($students as $student)
                         <tr>
-                            <td>{{ $student->name }}</td>
+                            <td>{{ $student->first_name }} {{ $student->last_name }}</td>
                             <td>{{ $student->email }}</td>
-                            <td>{{ $student->father_name ?? 'N/A' }}</td>
+                            <td>{{ $student->father_first_name }} {{ $student->father_last_name }}</td>
                             <td>{{ $student->address ?? 'N/A' }}</td>
-                            <td>{{ $student->age ?? 'N/A' }}</td>
+                            <td>{{ $student->date_of_birth ?? 'N/A' }}</td>
                             <td>{{ $student->phone ?? 'N/A' }}</td>
                             <td>
                                 <div class="action-buttons">

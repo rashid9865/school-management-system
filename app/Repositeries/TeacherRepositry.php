@@ -38,7 +38,7 @@ class TeacherRepositry implements CommonInterface
     {
         $teacher = Teacher::find($id);
 
-        $teacher->update([
+        $teacher->update([  
              'name' => $teacherDetails['name'], 
             'email' => $teacherDetails['email'],
             'phone' => $teacherDetails['phone'] ?? null,
