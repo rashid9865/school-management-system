@@ -4,6 +4,11 @@
     All Grades
 @endsection
 
+@section('csrf_token')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+
+
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -226,6 +231,57 @@
     font-size: 0.75rem;
 }
 
+.status-btn {
+        width: 64px;
+        height: 34px;
+        padding: 0;
+        border-radius: 999px;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+        border: none;
+        cursor: pointer;
+        transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .status-btn::before {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    .status-btn .toggle-thumb {
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+        transition: left 0.2s ease;
+    }
+
+    .status-btn.active {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        box-shadow: 0 8px 22px rgba(34, 197, 94, 0.22);
+    }
+
+    .status-btn.active .toggle-thumb {
+        left: calc(100% - 30px);
+    }
+
+    .status-btn.inactive {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        box-shadow: 0 8px 22px rgba(239, 68, 68, 0.22);
+    }
+
+    .status-btn.inactive .toggle-thumb {
+        left: 4px;
+    }
 /* Responsive Design */
 @media (max-width: 768px) {
     .grades-index-container {
@@ -311,7 +367,9 @@
                                     <th><i class="fas fa-hashtag me-1"></i>#</th>
                                     <th><i class="fas fa-graduation-cap me-1"></i>Grade Name</th>
                                     <th><i class="fas fa-align-left me-1"></i>Description</th>
+                                    <th><i class="fas fa-toggle-on me-1"></i>Status</th>
                                     <th><i class="fas fa-cogs me-1"></i>Actions</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -323,6 +381,11 @@
                                             {{ $grade->description ? $grade->description : 'No description provided' }}
                                         </td>
                                         <td>
+                                            <button type="button" class="status-btn btn {{ $grade->status ? 'active' : 'inactive' }}" data-id="{{ $grade->id }}" data-status="{{ $grade->status }}" aria-label="Toggle grade status">
+                                                <span class="toggle-thumb"></span>
+                                            </button>
+                                        </td>
+                                        <td> 
                                             <div class="action-buttons">
                                                 <a href="{{ route('grades.show', $grade->id) }}" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-eye"></i>View
@@ -355,3 +418,51 @@
     </div>
 </div>
 @endsection
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButtons = document.querySelectorAll('.status-btn');
+        const url = '{{ route('grades.toggle') }}';
+        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const gradeId = this.dataset.id;
+                const status = Number(this.dataset.status);
+                const buttonEl = this;
+
+                buttonEl.disabled = true;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ id: gradeId, status: status })
+                })
+                .then(response => response.json().then(data => ({ status: response.status, body: data })))
+                .then(({ status, body }) => {
+                    buttonEl.disabled = false;
+
+                    if (status !== 200) {
+                        console.error('Grade toggle error:', body);
+                        return;
+                    }
+
+                    const newStatus = Number(body.status);
+                    buttonEl.dataset.status = newStatus;
+                    buttonEl.classList.toggle('active', newStatus === 1);
+                    buttonEl.classList.toggle('inactive', newStatus === 0);
+                    buttonEl.innerHTML = `<span class="toggle-thumb"></span>`;
+                })
+                .catch(error => {
+                    console.error('Grade toggle failed:', error);
+                    buttonEl.disabled = false;
+                });
+            });
+        });
+    });
+</script>
+@endsection 
