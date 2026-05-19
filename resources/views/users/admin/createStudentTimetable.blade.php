@@ -34,6 +34,11 @@ Create Student Timetable
         font-size: 1.5rem;
     }
 
+    .error-text {
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+
     @media (max-width: 640px) {
         .form-grid {
             grid-template-columns: 1fr;
@@ -176,108 +181,259 @@ Create Student Timetable
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const grade = document.getElementById('grade');
-    const schedule = document.getElementById('schedule');
-    const subject = document.getElementById('subject');
-    const day = document.getElementById('day');
-    const startTime = document.getElementById('start_time');
-    const endTime = document.getElementById('end_time');
+    const gradeSelect = document.getElementById('grade');
+    const scheduleSelect = document.getElementById('schedule');
+    const daySelect = document.getElementById('day');
+    const subjectSelect = document.getElementById('subject');
+    const startTimeSelect = document.getElementById('start_time');
+    const endTimeSelect = document.getElementById('end_time');
 
-    function resetSubject() {
-        subject.innerHTML = `<option>Select schedule first</option>`;
-        subject.disabled = true;
-     }
+   
 
-    function resetTime() {
-        startTime.innerHTML = `<option>Select subject first</option>`;
-        endTime.innerHTML = `<option>Select start time first</option>`;
-        startTime.disabled = true;
-        endTime.disabled = true;
-    }
+    // =========================
+    // GRADE CHANGE
+    // =========================
+    gradeSelect.addEventListener('change', function () {
 
-    // Schedule change
-    schedule.addEventListener('change', function () {
+        const gradeId = this.value;
+        // reset fields
+        subjectSelect.innerHTML =
+            '<option value="">Select Subject</option>';
 
-        resetSubject();
-        resetTime();
+        startTimeSelect.innerHTML =
+            '<option value="">Select Subject First</option>';
 
-        const opt = this.options[this.selectedIndex];
-        const selectedDay = opt.getAttribute('data-day') || '';
+        endTimeSelect.innerHTML =
+            '<option value="">Select Start Time First</option>';
 
-        day.innerHTML = `<option value="${selectedDay}" selected>${selectedDay}</option>`;
+        subjectSelect.disabled = true;
+        startTimeSelect.disabled = true;
+        endTimeSelect.disabled = true;
 
-        if (grade.value) loadSubjects();
+        if (!gradeId) {
+            return;
+        }
+
+        // load all subjects of this grade
+        loadSubjects();
+       
     });
 
-    // Grade change
-    grade.addEventListener('change', function () {
-        resetSubject();
-        resetTime();
-        if (schedule.value) loadSubjects();
+    // =========================
+    // SCHEDULE CHANGE
+    // =========================
+    scheduleSelect.addEventListener('change', function () {
+
+        const option =
+            this.options[this.selectedIndex];
+        const selectedDay =
+            option.getAttribute('data-day');
+
+        console.log('Selected Day:', selectedDay);
+
+        if (!selectedDay) {
+            daySelect.innerHTML =
+                '<option value="">Select Day</option>';
+            return;
+        }
+
+        // set day automatically
+        daySelect.innerHTML =
+            `<option value="${selectedDay}">
+                ${selectedDay}
+            </option>`;
+
+        // IMPORTANT:
+        // do NOT hide subjects here
+        // only reload subjects normally
+
+        if (gradeSelect.value) {
+            loadSubjects();
+        }
     });
 
-    // Load subjects
+    // =========================
+    // LOAD SUBJECTS
+    // =========================
     function loadSubjects() {
 
-        fetch(`/api/available-subjects?grade_id=${grade.value}&day=${day.value}`)
-            .then(res => res.json())
+        const gradeId = gradeSelect.value;
+        if (!gradeId) {
+            return;
+        }
+
+        subjectSelect.disabled = true;
+
+        subjectSelect.innerHTML =
+            '<option>Loading...</option>';
+       
+        fetch(`/available-subjects?grade_id=${gradeId}`)
+            .then(response => response.json())
             .then(data => {
 
-                subject.innerHTML = `<option value="">Select Subject</option>`;
+                console.log('Subjects:', data);
+
+                subjectSelect.innerHTML =
+                    '<option value="">Select Subject</option>';
 
                 if (!data.length) {
-                    subject.innerHTML = `<option>No subjects available</option>`;
-                    subject.disabled = true;
+
+                    subjectSelect.innerHTML +=
+                        '<option disabled>No subjects available</option>';
+
+                    subjectSelect.disabled = true;
+
                     return;
                 }
 
-                data.forEach(s => {
-                    subject.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+                data.forEach(subject => {
+
+                    const subName =
+                        subject.name ?? subject;
+
+                    subjectSelect.innerHTML += `
+                        <option value="${subName}">
+                            ${subName}
+                        </option>
+                    `;
                 });
 
-                subject.disabled = false;
+                subjectSelect.disabled = false;
+            })
+            .catch(error => {
+
+                console.log(error.message);
+
+                subjectSelect.innerHTML =
+                    '<option>Error loading subjects</option>';
+
+                subjectSelect.disabled = true;
             });
     }
 
-    // Subject change
-    subject.addEventListener('change', function () {
+    // =========================
+    // SUBJECT CHANGE
+    // =========================
+    subjectSelect.addEventListener('change', function () {
 
-        if (!this.value) return;
+        const subject = this.value;
 
-        fetch(`/api/available-times?grade_id=${grade.value}&subject=${subject.value}&day=${day.value}&schedule_id=${schedule.value}`)
-            .then(res => res.json())
-            .then(data => {
+        startTimeSelect.innerHTML =
+            '<option value="">Select Start Time</option>';
 
-                startTime.innerHTML = `<option value="">Select start time</option>`;
-                endTime.innerHTML = `<option>Select start time first</option>`;
+        endTimeSelect.innerHTML =
+            '<option value="">Select Start Time First</option>';
 
-                data.forEach(t => {
-                    startTime.innerHTML += `<option value="${t}">${t}</option>`;
-                });
+        startTimeSelect.disabled = true;
+        endTimeSelect.disabled = true;
 
-                startTime.disabled = false;
-                endTime.disabled = true;
+        if (!subject) {
+            return;
+        }
+
+        const gradeId =
+            gradeSelect.value;
+
+        const scheduleId =
+            scheduleSelect.value;
+
+        const day =
+            daySelect.value;
+
+        if (!gradeId || !scheduleId || !day) {
+            return;
+        }
+
+        fetch(
+            `/api/available-times?grade_id=${gradeId}&subject=${encodeURIComponent(subject)}&day=${encodeURIComponent(day)}&schedule_id=${scheduleId}`
+        )
+        .then(response => response.json())
+        .then(data => {
+
+            console.log('Times:', data);
+
+            startTimeSelect.innerHTML =
+                '<option value="">Select Start Time</option>';
+
+            if (!data.length) {
+
+                startTimeSelect.innerHTML +=
+                    '<option disabled>No Times Available</option>';
+
+                startTimeSelect.disabled = true;
+
+                return;
+            }
+
+            data.forEach(time => {
+
+                startTimeSelect.innerHTML += `
+                    <option value="${time}">
+                        ${time}
+                    </option>
+                `;
             });
+
+            startTimeSelect.disabled = false;
+        })
+        .catch(error => {
+
+            console.log(error);
+
+            startTimeSelect.innerHTML =
+                '<option>Error loading times</option>';
+        });
     });
 
-    // Start time change (FIXED LOGIC)
-    startTime.addEventListener('change', function () {
+    // =========================
+    // START TIME CHANGE
+    // =========================
+    startTimeSelect.addEventListener('change', function () {
 
-        const start = this.value;
+        const selectedStartTime =
+            this.value;
 
-        endTime.innerHTML = `<option value="">Select end time</option>`;
+        endTimeSelect.innerHTML =
+            '<option value="">Select End Time</option>';
+
+        if (!selectedStartTime) {
+
+            endTimeSelect.disabled = true;
+
+            return;
+        }
 
         let found = false;
 
-        Array.from(startTime.options).forEach(opt => {
+        Array.from(startTimeSelect.options)
+            .forEach(option => {
 
-            if (opt.value && opt.value >= start) {
-                found = true;
-                endTime.innerHTML += `<option value="${opt.value}">${opt.value}</option>`;
-            }
-        });
+                if (
+                    option.value &&
+                    option.value > selectedStartTime
+                ) {
 
-        endTime.disabled = !found;
+                    found = true;
+
+                    endTimeSelect.innerHTML += `
+                        <option value="${option.value}">
+                            ${option.value}
+                        </option>
+                    `;
+                }
+            });
+
+        if (!found) {
+
+            endTimeSelect.innerHTML +=
+                '<option disabled>No End Time Available</option>';
+
+            endTimeSelect.disabled = true;
+
+            return;
+        }
+
+        endTimeSelect.disabled = false;
     });
 
 });
