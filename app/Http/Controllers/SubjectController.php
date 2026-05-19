@@ -162,4 +162,17 @@ class SubjectController extends Controller
     {
         return view('users.admin.searchAll');
     }
+
+    public function status($id)
+    {
+        $subject = $this->subjectRepository->findById($id);
+       return response()->json($subject);
+        // Toggle the status
+        $subject->status = !$subject->status;
+        $subject->save();
+
+        return response()->json(['status' => $subject->status]);
+    }
+
+    
 }
