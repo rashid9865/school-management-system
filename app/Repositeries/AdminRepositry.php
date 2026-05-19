@@ -38,7 +38,8 @@ class AdminRepositry implements  CommonInterface
         return $admin;
     }
     public function delete($id)
-    {        $admin = User::findOrFail($id);
+    {       
+        $admin = User::findOrFail($id);
         $admin->delete();
         return true;
     }   
