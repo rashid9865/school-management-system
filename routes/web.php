@@ -193,9 +193,10 @@ Route::post('/assign/subject/', [SubjectController::class, 'assignSubject'])->na
 Route::post('/subjects/toggle-status', [SubjectController::class, 'toggleStatus'])->name('subject.toggle');
 Route::get('/search/subjects', [SubjectController::class, 'search'])->name('subjects.search');
 Route::get('/search/results', [SubjectController::class, 'searchResults'])->name('search.results');
-
+Route::post('/status/subjects/{id}', [SubjectController::class, 'status'])->name('subjects.status');
 // Grades
 Route::resource('/grades', GradeController::class);
+Route::post('/grades/toggle-status', [GradeController::class, 'toggleStatus'])->name('grades.toggle');
 Route::get('/assign/student', [GradeController::class, 'assignStudent'])->name('assignStudent');
 Route::post('/student/assigned', [GradeController::class, 'studentAssigned'])->name('studentAssigned');
 Route::get('/assign/subjects', [GradeController::class, 'assignSubjects'])->name('assignSubjects');
@@ -219,7 +220,7 @@ Route::put('/updateStudentTimeTable/{id}', [TimeTableController::class, 'update'
 Route::get('/admin/timetables', [TimeTableController::class, 'index'])->name('admin.timetables.index');
 Route::get('/api/subjects-by-grade/{gradeId}', [TimeTableController::class, 'getSubjectsByGrade'])->name('api.subjects.by.grade');
 Route::get('/api/available-times', [TimeTableController::class, 'getAvailableTimes'])->name('api.available.times');
-Route::get('/api/available-subjects', [TimeTableController::class, 'getAvailableSubjects'])->name('api.available.subjects');
+Route::get('/available-subjects', [TimeTableController::class, 'getAvailableSubjects'])->name('api.available.subjects');
 Route::delete('/admin/timetables/{id}', [TimeTableController::class, 'destroy'])->name('admin.timetables.destroy');
 
 // ============================================
@@ -241,6 +242,8 @@ Route::prefix('reports')->name('reports.')->middleware('auth')->group(function (
     Route::get('/attendance', [ReportController::class, 'attendanceReports'])->name('attendance');
     Route::get('/fees', [ReportController::class, 'feeReports'])->name('fees');
 });
+
+Route::get('/test/{id}', [TimeTableController::class, 'getAvailableSubjects'])->name('timetable.test');
 
 
 
