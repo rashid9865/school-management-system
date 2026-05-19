@@ -21,6 +21,7 @@ use App\Http\Requests\ApproveTeacherAttendanceRequest;
 use Carbon\Carbon;
 use App\Repositeries\StudentRepositry;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreTeacherRequest;
 
 class TeacherController extends Controller
 {
@@ -69,42 +70,11 @@ class TeacherController extends Controller
     {
         return view('users.teacher.register');
     }
-    public function store(Request $request)
+    public function store(StoreTeacherRequest $request)
     {
-       
-        $request->validate([
-            'name' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed',
-            'phone' => 'required|numeric',
-            'qualification' => 'required',
-            'hire_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3000',
-            'gender' => 'nullable|string',
-            'birth_date' => 'nullable|date',
-            'address' => 'nullable|string',
-            'status' => 'nullable|string',
-        ],
-        [
-            'name.required' => 'The name field is required.',
-            'name.string' => 'The name must be a string.',
-            'name.regex' => 'The name may only contain letters and spaces.',
-            'email.required' => 'The email field is required.',
-            'email.email' => 'The email must be a valid email address.',
-            'email.unique' => 'The email has already been taken.',
-            'password.required' => 'The password field is required.',
-            'password.confirmed' => 'The password confirmation does not match.',
-            'phone.required' => 'The phone field is required.',
-            'qualification.required' => 'The qualification field is required.',
-            'hire_date.required' => 'The hire date field is required.',
-            'hire_date.date' => 'The hire date must be a valid date.',
-        ]
-        );
-        
-        $this->teacherService->registerTeacher(
-            $request->only(['name', 'email','phone', 'qualification', 'hire_date', 'password', 'gender', 'birth_date', 'address', 'status']),
-            $request->file('image')
-        );
+        $validate = $request->validated();
+          
+        $this->teacherService->registerTeacher($validate,$request->file('image'));
         
         return redirect()->route('admin.dashboard')->with('success', 'Teacher registered successfully.');
     }
