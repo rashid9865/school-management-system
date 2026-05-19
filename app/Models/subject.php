@@ -27,4 +27,9 @@ class subject extends Model
     {
         return $this->belongsToMany(grade::class, 'grade_subject');
     }
+
+    public function timetables()
+    {
+        return $this->belongsToMany(timetable::class);
+    }
 }
