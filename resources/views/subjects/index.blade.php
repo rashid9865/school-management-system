@@ -290,21 +290,54 @@ body {
 }
 
 .toggle-status-btn {
+    width: 64px;
+    height: 34px;
+    padding: 0;
     border-radius: 999px;
-    padding: 0.85rem 1.3rem;
-    min-width: 130px;
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
-    font-weight: 700;
-    font-size: 0.82rem;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
     border: none;
-    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.14);
+}
+
+.toggle-status-btn::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.toggle-status-btn .toggle-thumb {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+    transition: left 0.2s ease;
+}
+
+.toggle-status-btn.active {
+    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+}
+
+.toggle-status-btn.active .toggle-thumb {
+    left: calc(100% - 30px);
+}
+
+.toggle-status-btn.inactive {
+    background: linear-gradient(135deg, #64748b 0%, #334155 100%);
+}
+
+.toggle-status-btn.inactive .toggle-thumb {
+    left: 4px;
 }
 
 .toggle-status-btn:hover {
@@ -316,18 +349,6 @@ body {
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
-}
-
-.toggle-status-btn.status-active {
-    background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
-}
-
-.toggle-status-btn.status-inactive {
-    background: linear-gradient(135deg, #64748b 0%, #334155 100%);
-}
-
-.toggle-status-btn .status-icon {
-    font-size: 1rem;
 }
 
 .toast-notification {
@@ -723,11 +744,9 @@ body {
                                         <td class="subject-name"><strong style="color: #1e293b; font-size: 1rem;">{{ $subject->name }}</strong></td>
                                         <td><span style="background: linear-gradient(135deg, rgba(79, 172, 254, 0.12) 0%, rgba(0, 242, 254, 0.08) 100%); color: #1e40af; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; border-left: 3px solid #4facfe;">{{ $subject->created_at->format('M d, Y') }}</span></td>
                                         <td>
-                                           
-                                            <button type="button" class="toggle-status-btn action-btn status-{{ $subject->status ? 'active' : 'inactive' }}" data-id="{{ $subject->id }}"
-        data-status="{{ $subject->status }}"><i class="fas status-icon {{ $subject->status ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i><span>{{ $subject->status ? 'Active' : 'Inactive' }}</span></button>
-                                         
-        
+                                            <button type="button" class="toggle-status-btn action-btn {{ $subject->status ? 'active' : 'inactive' }}" data-id="{{ $subject->id }}" data-status="{{ $subject->status }}" aria-label="Toggle subject status">
+                                                <span class="toggle-thumb"></span>
+                                            </button>
                                         </td>
                                         <td>
                                             <div class="action-buttons-group">
@@ -822,7 +841,8 @@ body {
         $.ajax({
             url: `/subjects/${subjectId}/edit`,
             type: 'GET',
-            headers: {
+            headers: 
+            {
                 'X-CSRF-TOKEN': token
             },
             success: function(response) {
@@ -903,8 +923,6 @@ body {
             }
 
             button.prop('disabled', true);
-            const icon = button.find('.status-icon');
-            icon.removeClass('fa-toggle-on fa-toggle-off').addClass('fa-spinner fa-spin');
 
             $.ajax({
                 url: "{{ route('subject.toggle') }}",
@@ -917,17 +935,14 @@ body {
                 success: function (response) {
                     const isActive = Number(response.status) === 1;
                     button.data('status', isActive ? 1 : 0);
-                    button.toggleClass('status-active status-inactive', false);
-                    button.addClass(isActive ? 'status-active' : 'status-inactive');
-                    button.find('span').text(isActive ? 'Active' : 'Inactive');
-                    icon.removeClass('fa-spinner fa-spin').addClass(isActive ? 'fa-toggle-on' : 'fa-toggle-off');
+                    button.toggleClass('active inactive', false);
+                    button.addClass(isActive ? 'active' : 'inactive');
                     showToast('success', `Subject is now ${isActive ? 'Active' : 'Inactive'}.`);
                 },
                 error: function (xhr, status, error) {
                     console.error("AJAX ERROR STATUS:", status);
                     console.error("HTTP STATUS CODE:", xhr.status);
                     console.error("RESPONSE TEXT:", xhr.responseText);
-                    icon.removeClass('fa-spinner fa-spin').addClass(status === 0 ? 'fa-toggle-off' : 'fa-toggle-on');
                     showToast('error', 'Unable to update subject status.');
                 },
                 complete: function () {
