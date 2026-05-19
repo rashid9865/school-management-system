@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Repositeries\UserRepository;
+use App\Http\Requests\StoreUserRequest;
 
 class AuthController extends Controller
 {
@@ -27,14 +28,9 @@ class AuthController extends Controller
         return view('users.admin.register', compact('users'));
     }
 
-    public function storeUser(Request $request)
+    public function storeUser(StoreUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|confirmed',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:4096',
-        ]);
+        $validated = $request->validated();
         
         $this->userService->register($request->all(), $request->file('image'));
         
