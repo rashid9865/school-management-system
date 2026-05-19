@@ -12,4 +12,11 @@ class TimeTable extends Model
     {
         return $this->hasMany(Grade::class);
     }
+
+    public function subjects()
+    {
+        return $this->belongsToMany(subject::class);
+    }
+    
+   
 }
