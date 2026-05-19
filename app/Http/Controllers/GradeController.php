@@ -182,6 +182,24 @@ class GradeController extends Controller
         return redirect()->back()->with('error', 'Grade not found!');
     }
 
+    public function toggleStatus(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:grades,id',
+            'status' => 'required|in:0,1',
+        ]);
+
+        $grade = $this->gradeRepository->findById($request->id);
+        if (!$grade) {
+            return response()->json(['error' => 'Grade not found'], 404);
+        }
+
+        $grade->status = $request->status == 1 ? 0 : 1;
+        $grade->save();
+
+        return response()->json(['status' => $grade->status]);
+    }
+
     public function getSubjectsByGrade($gradeId)
     {
         $grade = \App\Models\grade::find($gradeId);
